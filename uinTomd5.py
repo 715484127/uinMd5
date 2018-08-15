@@ -1,6 +1,7 @@
 import hashlib
 from threading import Thread
 import time
+from itertools import combinations, permutations
 
 
 def batch1(name):
@@ -23,6 +24,8 @@ def batch1(name):
 
 
 if __name__ == '__main__':
-    t = Thread(target=batch1, args=('1-5',))
-    t.start()
+    # t = Thread(target=batch1, args=('1-5',))
+    # t.start()
     print('主线程')
+    print(list(permutations([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'], 2)))
+
