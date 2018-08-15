@@ -1,17 +1,28 @@
 import hashlib
-
-uinStart1 = 100000000
-uinEnd1 = 2000000000
-md5Str = hashlib.md5()
-
-while True:
-    uin = str(uinStart1)
-    md5Str.update(uin.encode(encoding='utf-8'))
-    print(md5Str.hexdigest())
-    if uinStart1 == uinEnd1:
-        break
-    uinStart1 += 1
+from threading import Thread
+import time
 
 
+def batch1(name):
+    time_start = time.time()  # time.time()为1970.1.1到当前时间的毫秒数
+    uinstart1 = 100000000
+    uinend1 = 500000000
+    # uinend1 = 2000000000
+    md5str = hashlib.md5()
+
+    while True:
+        uin = str(uinstart1)
+        md5str.update(uin.encode(encoding='utf-8'))
+        print(md5str.hexdigest())
+        if uinstart1 == uinend1:
+            break
+        uinstart1 += 1
+
+    time_end = time.time()
+    print(time_end - time_start)
 
 
+if __name__ == '__main__':
+    t = Thread(target=batch1, args=('1-5',))
+    t.start()
+    print('主线程')
