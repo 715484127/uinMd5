@@ -1,0 +1,95 @@
+bool table()
+{
+	int i = 0;
+	char total[12] = { 'm','m' };
+	char* p = total + 2;
+	MD5 md5;
+	string temp;
+
+
+
+
+
+	sqlite3 *db_0 = NULL;
+	char *zErrMsg = 0;
+	int rc = 0;
+	char *pDbName_0 = "e:\\UIN_0.db";
+	char *sql = NULL;
+
+
+
+	//创建db
+	rc = sqlite3_open(pDbName_0, &db_0);
+	if (rc)
+	{
+		sqlite3_close(db_0);
+		return 0;
+	}
+
+	//创建message表
+	sql = "CREATE TABLE UIN ( UIN INTEGER PRIMARY KEY, md5 TEXT);";
+	rc = sqlite3_exec(db_0, sql, NULL, 0, &zErrMsg);
+	if (rc != SQLITE_OK)
+	{
+		sqlite3_free(zErrMsg);
+	}
+
+	sqlite3_exec(db_0, "PRAGMA synchronous = OFF; ", 0, 0, 0);
+	sqlite3_exec(db_0, "begin;", 0, 0, 0);
+
+	sqlite3_stmt *stmt;
+
+	sql = "insert into UIN values(?,?)";
+
+	sqlite3_prepare_v2(db_0, sql, strlen(sql), &stmt, 0);
+	//0x3B9AC9FF
+
+	for (int i = 100000000; i <= 2000000000; i++) //dec 999 999 999
+	{
+		sprintf(p, "%d", i);
+		temp = total;
+		string aa = md5.ToMD5(temp);
+
+		sqlite3_reset(stmt);
+		sqlite3_bind_int(stmt, 1, i);
+		//	sqlite3_bind_text(stmt, 2, p, strlen(p), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 2, (char*)aa.c_str(), aa.size(), SQLITE_STATIC);
+		int rc = sqlite3_step(stmt);
+
+		if (rc != SQLITE_DONE)
+		{
+
+			printf("insert fail %s\r\n", sqlite3_errmsg(db_0));
+
+		}
+
+	}
+
+	for (int i = -2000000000; i <= -100000000; i++) //dec 999 999 999
+	{
+		sprintf(p, "%d", i);
+		temp = total;
+		string aa = md5.ToMD5(temp);
+
+		sqlite3_reset(stmt);
+		sqlite3_bind_int(stmt, 1, i);
+	//	sqlite3_bind_text(stmt, 2, p, strlen(p), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 2, (char*)aa.c_str(), aa.size(), SQLITE_STATIC);
+		int rc = sqlite3_step(stmt);
+
+		if (rc != SQLITE_DONE)
+		{
+
+			printf("insert fail %s\r\n", sqlite3_errmsg(db_0));
+
+		}
+
+	}
+
+	sqlite3_finalize(stmt);
+	sqlite3_exec(db_0, "commit;", 0, 0, 0);
+
+
+
+	return 1;
+}
